@@ -1,10 +1,39 @@
 {
   "name": "export-mail",
+  "version": "1.0.0",
+  "description": "Professional CLI tool to export Outlook emails to MBOX format",
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "bin": {
+    "export-mail": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "bun run index.ts",
+    "build": "bun build index.ts --outdir ./dist --target bun",
+    "start": "bun run build && ./dist/index.js"
+  },
+  "keywords": [
+    "outlook",
+    "email",
+    "mbox",
+    "export",
+    "cli"
+  ],
+  "dependencies": {
+    "@azure/msal-node": "^2.6.6",
+    "commander": "^11.1.0",
+    "axios": "^1.6.7",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.1",
+    "inquirer": "^9.2.15",
+    "date-fns": "^3.3.1",
+    "mime": "^4.0.1"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/inquirer": "^9.0.7",
+    "@types/mime": "^3.0.4"
   },
   "peerDependencies": {
     "typescript": "^5"

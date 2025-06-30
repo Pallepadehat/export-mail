@@ -10,6 +10,10 @@ dist
 coverage
 *.lcov
 
+.cursor
+.cursor/
+
+
 # logs
 logs
 _.log
