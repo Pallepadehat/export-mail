@@ -111,10 +111,6 @@ bun run dev full --folder inbox --limit 1000 --from 2024-01-01 --compress
 
 - `auth` - Authenticate with Microsoft Graph API
 - `auth --reset` - Reset existing authentication
-- `config` - Configure Azure AD application settings
-  - `-c, --client-id <id>` - Set custom Azure AD Application (client) ID
-  - `-t, --tenant-id <id>` - Set custom Azure AD Directory (tenant) ID
-  - `--reset` - Reset to default configuration
 - `status` - Show authentication and configuration status
 
 ### Download Commands
@@ -204,40 +200,6 @@ bun run dev auth --reset
 # Check status
 bun run dev status
 ```
-
-### Organization Blocked Access (AADSTS50105)
-
-If you get an error about the application being blocked by your administrator:
-
-**Solution: Create Your Own Azure AD App Registration**
-
-1. **Register Application in Azure Portal:**
-
-   - Go to [Azure Portal](https://portal.azure.com) → Azure Active Directory → App registrations
-   - Click "New registration"
-   - Name: `Export Mail CLI`
-   - Account types: `Accounts in this organizational directory only`
-   - Redirect URI: Leave blank
-   - Click "Register"
-
-2. **Configure Application:**
-
-   - Note the **Application (client) ID** and **Directory (tenant) ID**
-   - Go to Authentication → Add platform → Mobile and desktop applications
-   - Add redirect URI: `http://localhost:3000`
-   - Go to API permissions → Add permission → Microsoft Graph → Delegated permissions
-   - Add: `Mail.Read`, `Mail.ReadWrite`, `User.Read`, `MailboxSettings.Read`
-   - Click "Grant admin consent" (may require admin approval)
-
-3. **Configure CLI:**
-
-   ```bash
-   # Set your custom app credentials
-   bun run dev config --client-id YOUR_CLIENT_ID --tenant-id YOUR_TENANT_ID
-
-   # Then authenticate
-   bun run dev auth
-   ```
 
 ### Permission Errors
 
