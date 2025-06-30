@@ -188,6 +188,60 @@ program
     }
   });
 
+// Config command
+program
+  .command("config")
+  .description("Configure Azure AD application settings")
+  .option("-c, --client-id <id>", "Azure AD Application (client) ID")
+  .option("-t, --tenant-id <id>", "Azure AD Directory (tenant) ID")
+  .option("--reset", "Reset to default configuration")
+  .action(async (options) => {
+    try {
+      const configManager = new ConfigManager();
+
+      if (options.reset) {
+        await configManager.resetConfig();
+        logger.success("✅ Configuration reset to defaults");
+        return;
+      }
+
+      if (options.clientId || options.tenantId) {
+        const updates: any = {};
+
+        if (options.clientId) {
+          updates.clientId = options.clientId;
+          logger.info(`Setting client ID: ${options.clientId}`);
+        }
+
+        if (options.tenantId) {
+          updates.tenantId = options.tenantId;
+          logger.info(`Setting tenant ID: ${options.tenantId}`);
+        }
+
+        await configManager.saveConfig(updates);
+        logger.success("✅ Configuration updated successfully");
+
+        // Clear auth cache when config changes
+        const authManager = new AuthManager();
+        await authManager.clearAuth();
+        logger.info("Authentication cache cleared. Please re-authenticate.");
+      } else {
+        // Show current config
+        const config = await configManager.getConfig();
+
+        console.log(chalk.blue.bold("\n⚙️ Current Configuration\n"));
+        console.log(`Client ID: ${chalk.cyan(config.clientId)}`);
+        console.log(`Tenant ID: ${chalk.cyan(config.tenantId)}`);
+        console.log(`Redirect URI: ${chalk.cyan(config.redirectUri)}`);
+        console.log(`Scopes: ${chalk.cyan(config.scopes.join(", "))}`);
+        console.log();
+      }
+    } catch (error) {
+      logger.error("Configuration error:", error);
+      process.exit(1);
+    }
+  });
+
 // Status command
 program
   .command("status")
